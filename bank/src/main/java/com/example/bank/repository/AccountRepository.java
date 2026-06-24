@@ -1,6 +1,7 @@
 package com.example.bank.repository;
 
 import com.example.bank.model.Account;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -22,13 +23,19 @@ public class AccountRepository {
         String sql = "INSERT INTO accounts(account_number, holder_name, email, balance ) VALUES (?, ?, ?, 0)";
 
         return jdbcTemplate.update(sql, accountNumber, holderName, email);
+
     }
 
     public Account findByAccountNumber(String accountNumber) {
 
         String sql = "SELECT * FROM accounts WHERE account_number = ? ";
 
-        return jdbcTemplate.queryForObject(sql, accountRowMapper, accountNumber);
+        try{
+            return jdbcTemplate.queryForObject(sql, accountRowMapper, accountNumber);
+        }
+        catch (EmptyResultDataAccessException exception){
+            return null;
+        }
     }
 
     public List<Account> findAll() {

@@ -3,6 +3,7 @@ package com.example.bank.service;
 import com.example.bank.dto.AccountResponse;
 import com.example.bank.dto.CreateAccountRequest;
 import com.example.bank.dto.UpdateAccountRequest;
+import com.example.bank.exception.AccountNotFoundException;
 import com.example.bank.model.Account;
 import com.example.bank.repository.AccountRepository;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,9 @@ public class AccountService {
     public AccountResponse findByAccountNumber(String accountNumber) {
 
         Account account = accountRepository.findByAccountNumber(accountNumber);
+        if(account==null){
+            throw new AccountNotFoundException(accountNumber);
+        }
         return convert(account);
     }
 
