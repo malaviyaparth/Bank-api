@@ -2,6 +2,7 @@ package com.example.bank.service;
 
 import com.example.bank.dto.AccountResponse;
 import com.example.bank.dto.CreateAccountRequest;
+import com.example.bank.dto.UpdateAccountRequest;
 import com.example.bank.model.Account;
 import com.example.bank.repository.AccountRepository;
 import org.springframework.stereotype.Service;
@@ -45,5 +46,23 @@ public class AccountService {
                 .stream()
                 .map(this::convert)
                 .toList();
+    }
+
+    public void updateAccount(String accountNumber, UpdateAccountRequest request){
+
+        int rows= accountRepository.updateAccount(accountNumber, request.getHolderName(), request.getEmail());
+
+        if(rows==0){
+            throw new AccountNotFoundException(accountNumber);
+        }
+    }
+
+    public void deleteAccount(String accountNumber){
+
+        int rows= accountRepository.deleteAccount(accountNumber);
+
+        if(rows==0){
+            throw new AccountNotFoundException(accountNumber);
+        }
     }
 }

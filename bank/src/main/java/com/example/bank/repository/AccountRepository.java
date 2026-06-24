@@ -38,4 +38,17 @@ public class AccountRepository {
         return jdbcTemplate.query(sql, accountRowMapper);
     }
 
+    public int updateAccount(String accountNumber, String holder, String email){
+
+        String sql= "UPDATE accounts SET holder_name=?, email=? WHERE account_number=?";
+
+        return jdbcTemplate.update(sql, holder, email, accountNumber);
+    }
+
+    public int deleteAccount(String accountNumber){
+
+        String sql= "DELETE FROM accounts WHERE account_number=?";
+
+        return jdbcTemplate.update(sql, accountNumber);
+    }
 }

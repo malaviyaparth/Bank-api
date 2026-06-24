@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 
-public class CreateAccountRequest {
+public class UpdateAccountRequest {
 
     @NotBlank(message = "Account holder name is required")
     private String holderName;
