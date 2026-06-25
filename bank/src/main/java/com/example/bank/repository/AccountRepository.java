@@ -5,6 +5,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
@@ -26,16 +27,11 @@ public class AccountRepository {
 
     }
 
-    public Account findByAccountNumber(String accountNumber) {
+    public Account findByAccountNumber(String accountNumber) throws EmptyResultDataAccessException{
 
         String sql = "SELECT * FROM accounts WHERE account_number = ? ";
 
-        try{
-            return jdbcTemplate.queryForObject(sql, accountRowMapper, accountNumber);
-        }
-        catch (EmptyResultDataAccessException exception){
-            return null;
-        }
+        return jdbcTemplate.queryForObject(sql, accountRowMapper, accountNumber);
     }
 
     public List<Account> findAll() {
@@ -50,6 +46,13 @@ public class AccountRepository {
         String sql= "UPDATE accounts SET holder_name=?, email=? WHERE account_number=?";
 
         return jdbcTemplate.update(sql, holder, email, accountNumber);
+    }
+
+    public int updateBalance(String accountNumber, BigDecimal balance) {
+
+        String sql = "UPDATE accounts SET balance = ? WHERE account_number = ?";
+
+        return jdbcTemplate.update(sql, balance, accountNumber);
     }
 
     public int deleteAccount(String accountNumber){
