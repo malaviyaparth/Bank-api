@@ -112,4 +112,30 @@ public class AccountService {
             throw new AccountNotFoundException(accountNumber);
         }
     }
+
+    public void transfer(TransferRequest request) {
+
+        try{
+            Account from = accountRepository.findByAccountNumber(request.getFromAccount());
+            Account to = accountRepository.findByAccountNumber(request.getToAccount());
+
+            if (from.getBalance().compareTo(request.getAmount()) < 0) {
+                throw new RuntimeException("Insufficient balance");
+            }
+
+            BigDecimal fromNewBalance = from.getBalance().subtract(request.getAmount());
+            accountRepository.updateBalance(from.getAccountNumber(), fromNewBalance);
+
+            BigDecimal toNewBalance = to.getBalance().add(request.getAmount());
+            accountRepository.updateBalance(to.getAccountNumber(), toNewBalance);
+
+            transactionRepository.save(from.getAccountNumber(), "TRANSFER_DEBIT", request.getAmount(), fromNewBalance);
+            transactionRepository.save(to.getAccountNumber(), "TRANSFER_CREDIT", request.getAmount(), toNewBalance);
+
+        } catch (EmptyResultDataAccessException e) {
+            throw new RuntimeException("Account not found");
+        } catch (Exception e) {
+            throw new RuntimeException("Transfer failed: rolled back manually - " + e.getMessage());
+        }
+    }
 }
