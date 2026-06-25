@@ -1,19 +1,21 @@
-package com.example.bank.model;
+package com.example.bank.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 
-public class Transaction {
 
-    private Integer transactionId;
+public class TransactionResponse {
+
     private String accountNumber;
     private String type;
     private BigDecimal amount;
